@@ -1,0 +1,34 @@
+CREATE DATABASE IF NOT EXISTS Perolino_LMS_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE Perolino_LMS_db;
+
+CREATE TABLE IF NOT EXISTS students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL,
+    registration_no VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(150) NOT NULL,
+    isbn VARCHAR(30) NOT NULL UNIQUE,
+    category VARCHAR(80) DEFAULT NULL,
+    copies INT NOT NULL DEFAULT 1,
+    available_copies INT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS borrows (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    book_id INT NOT NULL,
+    borrow_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    return_date DATE DEFAULT NULL,
+    status ENUM('borrowed','returned') NOT NULL DEFAULT 'borrowed',
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
